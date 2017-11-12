@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from sentiment import analyze_sentiment
+from sentiment import analyze_sentiment, analyze_subjectivity
 import requests
 import re
 from numpy import mean
@@ -38,36 +38,36 @@ def average_sentiment(text, ignore_zeros=True, negative_only=False):
     return mean([analyze_sentiment(line) for line in text])
 
 
+def average_subjectivity(text, ignore_zeros=True, negative_only=False):
+    if negative_only:
+        return mean([x for x in [analyze_subjectivity(line) for line in text] if x < 0])
+    if ignore_zeros:
+        return mean([x for x in [analyze_subjectivity(line) for line in text] if x != 0])
+    return mean([analyze_subjectivity(line) for line in text])
+
+
+def full_analysis(currency_name, subreddit_url):
+    titles = get_titles(subreddit_url)
+    sentiment = average_sentiment(titles)
+    subjectivity = average_subjectivity(titles)
+
+    print currency_name + ":"
+    print "Sentiment:", sentiment
+    print "Subjectivity:", subjectivity
+    print
+
+
+
+
 if __name__ == '__main__':
-    titles = get_titles(DASH_SUBREDDIT)
-    print "Dash Sentiment:", average_sentiment(titles)
-
-    titles = get_titles(LITECOIN_SUBREDDIT)
-    print "Litecoin Sentiment:", average_sentiment(titles)
-
-    titles = get_titles(MONERO_SUBREDDIT)
-    print "Monero Sentiment:", average_sentiment(titles)
-
-    titles = get_titles(BITCOIN_SUBREDDIT)
-    print "Bitcoin Sentiment:", average_sentiment(titles)
-
-    titles = get_titles(BITCOIN_CASH_SUBREDDIT)
-    print "Bitcoin Cash Sentiment:", average_sentiment(titles)
-
-    titles = get_titles(LISK_CASH_SUBREDDIT)
-    print "Lisk Sentiment:", average_sentiment(titles)
-
-    titles = get_titles(AUGUR_CASH_SUBREDDIT)
-    print "Augur Sentiment:", average_sentiment(titles)
-
-    titles = get_titles(NEO_SUBREDDIT)
-    print "Neo Sentiment:", average_sentiment(titles)
-
-    titles = get_titles(STEEM_SUBREDDIT)
-    print "Steem Sentiment:", average_sentiment(titles)
-
-    titles = get_titles(ETHEREUM_SUBREDDIT)
-    print "Ethereum Sentiment:", average_sentiment(titles)
-
-    titles = get_titles(ETHEREUM_CLASSIC_SUBREDDIT)
-    print "Ethereum classic Sentiment:", average_sentiment(titles)
+    full_analysis("Dash", DASH_SUBREDDIT)
+    full_analysis("Litecoin", LITECOIN_SUBREDDIT)
+    full_analysis("Monero", MONERO_SUBREDDIT)
+    full_analysis("Bitcoin", BITCOIN_SUBREDDIT)
+    full_analysis("Bitcoin Cash", BITCOIN_CASH_SUBREDDIT)
+    full_analysis("Lisk", LISK_CASH_SUBREDDIT)
+    full_analysis("Augur", AUGUR_CASH_SUBREDDIT)
+    full_analysis("Neo", NEO_SUBREDDIT)
+    full_analysis("Steem", STEEM_SUBREDDIT)
+    full_analysis("Ethereum", ETHEREUM_SUBREDDIT)
+    full_analysis("Ethereum Classic", ETHEREUM_CLASSIC_SUBREDDIT)

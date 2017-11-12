@@ -12,6 +12,11 @@ def analyze_sentiment(text):
 	return blob.sentiment.polarity
 
 
+def analyze_subjectivity(text):
+	blob = TextBlob(text)
+	return blob.sentiment.subjectivity
+
+
 def read_text_file(filename):
 	return clear_text(open(filename).read())
 	

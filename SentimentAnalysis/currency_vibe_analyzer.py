@@ -19,6 +19,7 @@ NEO_SUBREDDIT = 'https://www.reddit.com/r/NEO/'
 STEEM_SUBREDDIT = 'https://www.reddit.com/r/steem/'
 ETHEREUM_CLASSIC_SUBREDDIT = 'https://www.reddit.com/r/EthereumClassic/'
 DOGECOIN_CLASSIC_SUBREDDIT = 'https://www.reddit.com/r/dogecoin/'
+RIPPLE_CLASSIC_SUBREDDIT = 'https://www.reddit.com/r/Ripple/'
 
 
 def get_titles(subreddit_url):
@@ -71,3 +72,4 @@ if __name__ == '__main__':
     full_analysis("Steem", STEEM_SUBREDDIT)
     full_analysis("Ethereum", ETHEREUM_SUBREDDIT)
     full_analysis("Ethereum Classic", ETHEREUM_CLASSIC_SUBREDDIT)
+    full_analysis("Ripple", RIPPLE_CLASSIC_SUBREDDIT)

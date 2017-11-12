@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from sentiment import analyze_sentiment, clear_text
+from sentiment import analyze_sentiment
 import requests
 import re
 from numpy import mean
@@ -20,7 +20,6 @@ STEEM_SUBREDDIT = 'https://www.reddit.com/r/steem/'
 ETHEREUM_CLASSIC_SUBREDDIT = 'https://www.reddit.com/r/EthereumClassic/'
 DOGECOIN_CLASSIC_SUBREDDIT = 'https://www.reddit.com/r/dogecoin/'
 
-# blank = """<a class="title may-blank outbound" data-event-action="title" href="https://coincodex.com/crypto/dash/?view1" tabindex="1" data-href-url="https://coincodex.com/crypto/dash/?view1" data-outbound-url="https://out.reddit.com/t3_7cgnr8?url=https%3A%2F%2Fcoincodex.com%2Fcrypto%2Fdash%2F%3Fview1&amp;token=AQAAYZsIWspgFRZ8Qxy2e_sWXCrmq1B8yf3L-XHFNZzxErTt4_-R&amp;app_name=reddit.com" data-outbound-expiration="1510513505000" rel="nofollow">🚀 Dash up 25% in the last hour! Any news or just cos of BCH cooling down and money flowing back to alts?</a>"""
 
 def get_titles(subreddit_url):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}

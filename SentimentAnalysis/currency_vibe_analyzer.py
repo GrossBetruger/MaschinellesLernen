@@ -21,6 +21,9 @@ ETHEREUM_CLASSIC_SUBREDDIT = 'https://www.reddit.com/r/EthereumClassic/'
 DOGECOIN_CLASSIC_SUBREDDIT = 'https://www.reddit.com/r/dogecoin/'
 RIPPLE_CLASSIC_SUBREDDIT = 'https://www.reddit.com/r/Ripple/'
 
+NEXT_PAGE_PATTERN = '\?count=\d+&amp;after=[^"]+'
+SECOND_NEXT_PAGE_PATTERN = '\?amp=&amp;count=\d+&amp;after=[^"]+'
+
 
 def get_titles(subreddit_url):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
@@ -28,6 +31,16 @@ def get_titles(subreddit_url):
     res.raise_for_status()
     raw_text = res.text
     titles = re.findall('<a class="title.+?>(.+?)<', raw_text)
+    next_url_suffix = re.findall(NEXT_PAGE_PATTERN, raw_text)
+    next_url_suffix2 = re.findall(SECOND_NEXT_PAGE_PATTERN, raw_text)
+    if next_url_suffix or next_url_suffix2:
+        next_url_suffix = next_url_suffix if next_url_suffix else  next_url_suffix2
+        number = int(re.findall("count=(\d+)", next_url_suffix[0])[0])
+        if number > 100:
+            return titles
+        next_url = subreddit_url.split("?")[0] + next_url_suffix[0]
+        return titles + get_titles(next_url)
+
     return titles
 
 

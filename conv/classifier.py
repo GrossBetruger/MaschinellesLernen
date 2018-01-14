@@ -67,6 +67,18 @@ saver = tf.train.Saver()
 model_save_path="./saved model v2/"
 model_name='model'
 
+
+mode = "test"
+
+
+def to_pred(probas):
+    return [smooth(pred) for pred in probas]
+
+
+def smooth(proba):
+    return 0 if proba < .5 else 1
+
+
 with tf.Session() as sess:
     summaryMerged = tf.summary.merge_all()
 
@@ -79,15 +91,47 @@ with tf.Session() as sess:
         saver.restore(sess, tf.train.latest_checkpoint(model_save_path))
     writer = tf.summary.FileWriter(filename, sess.graph)
 
-    for epoch in range(epochs):
-        batches = dg.get_mini_batches(batchSize,(128,128), allchannel=False)
-        for imgs ,labels in batches:
-            imgs=np.divide(imgs, 255)
-            error, sumOut, acu, steps,_ = sess.run([cost, summaryMerged, accuracy,global_step,optimizer],
-                                            feed_dict={input_img: imgs, target_labels: labels})
-            writer.add_summary(sumOut, steps)
-            print("epoch=", epoch, "Total Samples Trained=", steps*batchSize, "err=", error, "accuracy=", acu)
-            if steps % 100 == 0:
-                print("Saving the model")
-                saver.save(sess, model_save_path+model_name, global_step=steps)
+    if mode == "train":
+        print "NUMBER OF EPOCHS", len(range(epochs))
+        for epoch in range(epochs):
+            batches = dg.get_mini_batches(batchSize,(128,128), allchannel=False)
+            for imgs ,labels in batches:
+                imgs=np.divide(imgs, 255)
+                error, sumOut, acu, steps,_ = sess.run([cost, summaryMerged, accuracy,global_step,optimizer],
+                                                feed_dict={input_img: imgs, target_labels: labels})
+                writer.add_summary(sumOut, steps)
+                print("epoch=", epoch, "Total Samples Trained=", steps*batchSize, "err=", error, "accuracy=", acu)
+                if steps % 100 == 0:
+                    print("Saving the model")
+                    saver.save(sess, model_save_path+model_name, global_step=steps)
 
+    elif mode == "test":
+        batches = dg.get_mini_batches(batchSize, (128, 128), allchannel=False)
+        count_true = int()
+        count_false = int()
+        for imgs, labels in batches:
+            imgs = np.divide(imgs, 255)
+
+            for index in range(batchSize):
+                model_pred = sess.run([prediction], feed_dict={input_img: imgs})[0][index]
+                print model_pred
+                smoothed = to_pred(model_pred)
+                print "predict", smoothed
+                print "labels", labels[1]
+                if list(labels[1]) == smoothed:
+                    print True
+                    count_true += 1
+                else:
+                    print False
+                    count_false += 1
+                print
+
+                print "true count", count_true
+                print "false count", count_false
+                total = count_false + count_true
+                print "precision", float(count_true)/total
+            # print labels[0]
+            # print to_pred(sess.run([prediction], feed_dict={input_img: imgs})[0][0])
+            # print
+    else:
+        raise Exception("invalid mode")

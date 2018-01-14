@@ -1,10 +1,8 @@
 import tensorflow as tf
 import numpy as np
 
+TARGET_ERROR_RATE = 0.001
 
-hello = tf.constant('Hello, Codacus!')
-sess = tf.Session()
-print(sess.run(hello))
 
 inputs=tf.placeholder('float',[None,2],name='Input')
 targets=tf.placeholder('float',name='Target')
@@ -34,13 +32,15 @@ out=[[0],[1],[1],[0]]
 inp=np.array(inp)
 out=np.array(out)
 
-epochs=4000 # number of training iterations
 
 with tf.Session() as sess:
     tf.global_variables_initializer().run()
-    for i in range(epochs):
-        error,_ =sess.run([cost,optimizer],feed_dict={inputs: inp,targets:out})
+    error = 1
+    i = 0
+    while error > TARGET_ERROR_RATE:
+        error, _ =sess.run([cost,optimizer],feed_dict={inputs: inp,targets:out})
         print(i,error)
+        i += 1
 
     while True:
         a = input("type 1st input :")

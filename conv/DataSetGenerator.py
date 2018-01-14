@@ -58,7 +58,7 @@ class DataSetGenerator:
         labels = []
         empty=False
         counter=0
-        print "DATA INFO", self.data_info
+        # print "DATA INFO", self.data_info[:5], "..."
         print "DATA LABELS", self.data_labels
         print "DATA LABELS", self.data_dir
         each_batch_size=int(batch_size/len(self.data_info))

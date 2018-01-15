@@ -64,7 +64,7 @@ epochs = 10
 batchSize = 10
 
 saver = tf.train.Saver()
-model_save_path="./saved_model_v1/"
+model_save_path="./saved model v2/"
 model_name='model'
 
 
@@ -112,7 +112,8 @@ with tf.Session() as sess:
         for imgs, labels in batches:
             imgs = np.divide(imgs, 255)
 
-            for index in range(batchSize):
+            assert len(imgs) == len(labels) == batchSize
+            for index in range(len(imgs)):
                 model_pred = sess.run([prediction], feed_dict={input_img: imgs})[0][index]
                 print model_pred
                 smoothed = to_pred(model_pred)

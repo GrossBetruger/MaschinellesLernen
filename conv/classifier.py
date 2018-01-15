@@ -64,7 +64,7 @@ epochs = 10
 batchSize = 10
 
 saver = tf.train.Saver()
-model_save_path="./saved model v2/"
+model_save_path="./saved_model_v1/"
 model_name='model'
 
 
@@ -117,8 +117,8 @@ with tf.Session() as sess:
                 print model_pred
                 smoothed = to_pred(model_pred)
                 print "predict", smoothed
-                print "labels", labels[1]
-                if list(labels[1]) == smoothed:
+                print "labels", labels[index]
+                if list(labels[index]) == smoothed:
                     print True
                     count_true += 1
                 else:
